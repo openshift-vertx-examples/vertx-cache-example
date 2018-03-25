@@ -1,0 +1,80 @@
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <title>Cache Mission - Eclipse Vert.x Booster</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div>
+        <h1>Vert.x Cache Booster</h1>
+
+        <p class="lead">
+            An example of a HTTP API using a <em>cache</em> to improve the response time. When calling the
+            <code>greeting service</code>, a <em>name</em> is retrieved from another service. This service takes
+            time (~ 2 seconds) to produce the response. To avoid every call to wait, the value is cached in a
+            remote cache service and reuse until eviction.
+        </p>
+        <p class="lead">
+            On this page you can invoke the <code>greeting service</code>. This service uses a <code>name
+            service</code> that takes 2 seconds to answer the request. The value is cached. You can also see
+            if a value is still cached.
+        </p>
+        
+        <h2>Greeting service</h2>
+        <button id="invoke" type="submit" class="btn btn-primary">Invoke</button>
+        <h3>Result:</h3>
+        <div class="row">
+            <div class="col-md-8">
+                <pre><code id="greeting-result">Invoke the service to see the result.</code></pre>
+            </div>
+            <div class="col-md-4">
+                <div id="cache-state"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+<script>
+    function updateCached() {
+        $.getJSON("/api/cached", function (res) {
+            var cached = res.cached;
+            if (cached) {
+                $("#cache-state").html("<h4><span class=\"label label-info\">A value is cached</span></h4>");
+            } else {
+                $("#cache-state").html("<h4><span class=\"label label-warning\">No cached value</span></h4>");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        updateCached();
+        $("#invoke").click(function (e) {
+            $("#greeting-result").text("Invoking the service...");
+            $.getJSON("/api/greeting", function (res) {
+                $("#greeting-result").text(JSON.stringify(res));
+            });
+            e.preventDefault();
+        });
+
+        setInterval(updateCached, 1000);
+    });
+</script>
+
+</body>
+
+</html>
