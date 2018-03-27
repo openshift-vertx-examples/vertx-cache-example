@@ -32,12 +32,13 @@ public class CacheVerticle extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> future) {
-        ttl = config().getInteger("cache.ttl", 10);
+        ttl = config().getInteger("cache.ttl", 5);
         // HTTP API
         Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
         router.get("/api/greeting").handler(this::greeting);
         router.get("/api/cached").handler(this::isCached);
+        router.delete("/api/cached").handler(this::clearTheValue);
         router.post("/api/ttl").handler(this::setTTL);
         router.get("/health").handler(rc -> rc.response().end("OK"));
         router.get("/*").handler(StaticHandler.create());
@@ -63,6 +64,19 @@ public class CacheVerticle extends AbstractVerticle {
         deployCuteNameService
             .andThen(startHttpServer)
             .subscribe(CompletableHelper.toObserver(future));
+    }
+
+    private void clearTheValue(RoutingContext rc) {
+        retrieveCache()
+            .flatMap(cache -> vertx.rxExecuteBlocking(future -> {
+                cache.remove(KEY);
+                future.complete();
+            }))
+            .toCompletable()
+            .subscribe(
+                () -> rc.response().setStatusCode(204).end(),
+                rc::fail
+            );
     }
 
     private void setTTL(RoutingContext rc) {

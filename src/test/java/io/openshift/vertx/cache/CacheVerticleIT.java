@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static io.restassured.RestAssured.delete;
 import static io.restassured.RestAssured.get;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -59,14 +60,6 @@ public class CacheVerticleIT {
     }
 
     @Test
-    public void testThatWeAreReady() {
-        await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions()
-            .until(() ->
-                get(route).andReturn().statusCode() == 200
-            );
-    }
-
-    @Test
     public void testCaching() {
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions()
             .until(() ->
@@ -105,5 +98,33 @@ public class CacheVerticleIT {
         long duration3 = end - begin;
 
         assertThat(duration2).isLessThan(duration3);
+    }
+
+    @Test
+    public void testCachingAndClear() {
+        await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions()
+            .until(() ->
+                get(route).andReturn().statusCode() == 200
+            );
+
+        long begin = System.currentTimeMillis();
+
+        get("/api/greeting").then()
+            .statusCode(equalTo(200));
+        long end = System.currentTimeMillis();
+        long duration1 = end - begin;
+
+        begin = System.currentTimeMillis();
+        get("/api/greeting").then().statusCode(equalTo(200));
+        end = System.currentTimeMillis();
+        long duration2 = end - begin;
+
+        assertThat(duration2).isLessThan(duration1);
+
+        get("/api/cached").then().body("cached", is(true));
+
+        delete("/api/cached").then().statusCode(204);
+
+        get("/api/cached").then().body("cached", is(false));
     }
 }

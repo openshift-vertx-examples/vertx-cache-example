@@ -28,9 +28,10 @@
             service</code> that takes 2 seconds to answer the request. The value is cached. You can also see
             if a value is still cached.
         </p>
-        
+
         <h2>Greeting service</h2>
-        <button id="invoke" type="submit" class="btn btn-primary">Invoke</button>
+        <button id="invoke" type="submit" class="btn btn-primary">Invoke the service</button>
+        <button id="clear" type="submit" class="btn btn-danger">Clear the cache</button>
         <h3>Result:</h3>
         <div class="row">
             <div class="col-md-8">
@@ -68,6 +69,19 @@
             $.getJSON("/api/greeting", function (res) {
                 $("#greeting-result").text(JSON.stringify(res));
             });
+            e.preventDefault();
+        });
+        $("#clear").click(function (e) {
+            $("#greeting-result").text("Clearing the service...");
+            $
+                .ajax({
+                    method: "DELETE",
+                    url: "/api/cached"
+                })
+                .done(function (msg) {
+                    $("#greeting-result").text("Invoke the service to see the result.");
+                });
+            
             e.preventDefault();
         });
 
