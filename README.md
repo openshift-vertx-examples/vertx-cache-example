@@ -13,7 +13,7 @@ oc create -f service-cache.yaml
 ```bash
 mvn fabric8:deploy -Popenshift
 ```
-4. Access the exposed route (`cache-booster`) - a HTML page to use the booster is exposed.
+4. Access the exposed route (`greeting-service`) - a HTML page to use the booster is exposed.
 
 ## Integration tests
 

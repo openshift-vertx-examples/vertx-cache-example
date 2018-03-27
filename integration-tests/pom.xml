@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>io.openshift.booster</groupId>
+		<artifactId>cache-booster-vertx</artifactId>
+		<version>1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>integration-tests</artifactId>
+	<name>Integration Tests</name>
+	<description>Tests integration of both services</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.openshift.booster</groupId>
+			<artifactId>cute-name-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.openshift.booster</groupId>
+			<artifactId>greeting-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+
+	<profiles>
+		<profile>
+			<id>openshift-it</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>fabric8-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>resource</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<profile>aggregate</profile>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-image-streams</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.parent.basedir}/cute-name-service/target</directory>
+											<includes>
+												<include>*-is.yml</include>
+											</includes>
+										</resource>
+										<resource>
+											<directory>${project.parent.basedir}/greeting-service/target</directory>
+											<includes>
+												<include>*-is.yml</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<nameServiceIS>${project.parent.basedir}/cute-name-service/target/cute-name-service-is.yml</nameServiceIS>
+								<greetingServiceIS>${project.parent.basedir}/greeting-service/target/greeting-service-is.yml</greetingServiceIS>
+							</systemPropertyVariables>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
