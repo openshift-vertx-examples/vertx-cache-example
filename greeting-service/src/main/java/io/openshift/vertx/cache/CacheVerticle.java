@@ -46,13 +46,10 @@ public class CacheVerticle extends AbstractVerticle {
 
         // Access to Cute name service.
         client = WebClient.create(vertx, new WebClientOptions()
-            .setDefaultHost("localhost")
-            .setDefaultPort(8081)
+            .setDefaultHost("cute-name-service")
+            .setDefaultPort(8080)
         );
 
-        Completable deployCuteNameService = vertx.rxDeployVerticle(CuteNameService.class.getName())
-            .toCompletable()
-            .doOnComplete(() -> LOGGER.info("Cute Name Service deployed"));
 
         Completable startHttpServer = vertx
             .createHttpServer()
@@ -60,9 +57,8 @@ public class CacheVerticle extends AbstractVerticle {
             .rxListen(config().getInteger("http.port", 8080))
             .toCompletable()
             .doOnComplete(() -> LOGGER.info("HTTP Server started"));
-
-        deployCuteNameService
-            .andThen(startHttpServer)
+        
+        startHttpServer
             .subscribe(CompletableHelper.toObserver(future));
     }
 

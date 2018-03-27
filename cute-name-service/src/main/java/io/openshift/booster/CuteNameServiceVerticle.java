@@ -1,30 +1,28 @@
-package io.openshift.vertx.cache;
+package io.openshift.booster;
 
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.CompletableHelper;
 import io.vertx.reactivex.core.AbstractVerticle;
-import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Implementation of a cute name service, exposed on port 8081.
- */
-public class CuteNameService extends AbstractVerticle {
+
+public class CuteNameServiceVerticle extends AbstractVerticle {
 
     private final static Set<String> used = new HashSet<>();
 
     @Override
     public void start(Future<Void> future) {
-        Router router = Router.router(vertx);
+        io.vertx.reactivex.ext.web.Router router = io.vertx.reactivex.ext.web.Router.router(vertx);
         router.get("/api/name").handler(this::getCuteName);
+        router.get("/health").handler(rc -> rc.response().end("OK"));
 
         vertx.createHttpServer()
             .requestHandler(router::accept)
-            .rxListen(8081)
+            .rxListen(config().getInteger("http.port", 8080))
             .toCompletable()
             .subscribe(CompletableHelper.toObserver(future));
     }
@@ -32,7 +30,9 @@ public class CuteNameService extends AbstractVerticle {
     private void getCuteName(RoutingContext rc) {
         // Introduce a delay on purpose.
         vertx.setTimer(2000, x ->
-            rc.response().end(new JsonObject().put("name", generate()).encode()));
+            rc.response()
+                .putHeader("content-type", "application/json")
+                .end(new JsonObject().put("name", generate()).encode()));
     }
 
     private static String generate() {
