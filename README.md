@@ -7,7 +7,7 @@ This booster demonstrates how to use a cache server from an Eclipse Vert.x appli
 1. Be sure to be logged in to your OpenShift cluster, and you are in the right OpenShift project
 2. Deploy the cache server using:
 ```bash
-oc create -f service-cache.yaml
+oc apply -f service.cache.yml
 ```
 3. Deploy the booster with:
 ```bash
