@@ -18,15 +18,24 @@
         <h1>Vert.x Cache Booster</h1>
 
         <p class="lead">
-            An example of a HTTP API using a <em>cache</em> to improve the response time. When calling the
-            <code>greeting service</code>, a <em>name</em> is retrieved from another service. This service takes
-            time (~ 2 seconds) to produce the response. To avoid every call to wait, the value is cached in a
-            remote cache service and reuse until eviction.
+            The Caching booster demonstrates how to use a cache to increase the response time of applications. 
+            It contains three components: the <code>greeting</code> service, the <code>cute name</code> service, and a remote cache.
         </p>
+        <div class="lead">
+          <ul>
+            <li>The <code>greeting</code> service is an HTTP API that depends on a value from another HTTP API: <code>cute name</code> service. 
+            That value may also be available in a remote cache.</li>
+            <li>When the <code>greeting</code> service is called, it first checks if the value it needs is stored in the remote cache service. 
+            If it is, then the cached value is returned in under 1 second.</li>
+            <li>If the value is not cached, the <code>greeting</code> service calls the <code>cute name</code> service and returns the value. This will take several seconds. 
+            <li>When a value is retrieved from the <code>cute name</code> service, it is also stored in the cache with a TTL of 5 seconds. 
+            After the TTL expires, the value is evicted from the cache.</li>
+          </ul>
+        </div>
         <p class="lead">
-            On this page you can invoke the <code>greeting service</code>. This service uses a <code>name
-            service</code> that takes 2 seconds to answer the request. The value is cached. You can also see
-            if a value is still cached.
+            Use the section below to invoke the <code>greeting</code> service. 
+            Each call to the <code>greeting</code> service records the time to complete the call.
+            This shows the difference between retrieving a cached value and a value directly from <code>cute name</code> service.
         </p>
 
         <h2>Greeting service</h2>
