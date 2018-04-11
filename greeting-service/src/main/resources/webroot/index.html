@@ -74,9 +74,11 @@
     $(document).ready(function () {
         updateCached();
         $("#invoke").click(function (e) {
+            var begin = new Date();
             $("#greeting-result").text("Invoking the service...");
             $.getJSON("/api/greeting", function (res) {
-                $("#greeting-result").text(JSON.stringify(res));
+                var end = new Date();
+                $("#greeting-result").text(JSON.stringify(res) + " - duration: " + (end - begin) + "ms");
             });
             e.preventDefault();
         });
