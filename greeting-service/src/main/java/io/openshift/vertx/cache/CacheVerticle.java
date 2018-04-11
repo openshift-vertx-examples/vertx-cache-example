@@ -15,17 +15,13 @@ import io.vertx.reactivex.ext.web.client.HttpResponse;
 import io.vertx.reactivex.ext.web.client.WebClient;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import io.vertx.reactivex.ext.web.handler.StaticHandler;
-import org.infinispan.client.hotrod.RemoteCache;
-import org.infinispan.client.hotrod.RemoteCacheManager;
-import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class CacheVerticle extends AbstractVerticle {
 
     private static final String KEY = "NAME";
-    private RemoteCache<String, String> cache;
+    private Cache<String, String> cache;
     private WebClient client;
     private int ttl = 10;
     private final Logger LOGGER = LoggerFactory.getLogger("Cache-Verticle");
@@ -43,13 +39,15 @@ public class CacheVerticle extends AbstractVerticle {
         router.get("/health").handler(rc -> rc.response().end("OK"));
         router.get("/*").handler(StaticHandler.create());
 
-
         // Access to Cute name service.
         client = WebClient.create(vertx, new WebClientOptions()
             .setDefaultHost("cute-name-service")
             .setDefaultPort(8080)
         );
 
+        Completable retrieveCache = Cache.<String, String>create(vertx)
+            .doOnSuccess(c -> this.cache = c)
+            .toCompletable();
 
         Completable startHttpServer = vertx
             .createHttpServer()
@@ -57,18 +55,13 @@ public class CacheVerticle extends AbstractVerticle {
             .rxListen(config().getInteger("http.port", 8080))
             .toCompletable()
             .doOnComplete(() -> LOGGER.info("HTTP Server started"));
-        
-        startHttpServer
+
+        retrieveCache.andThen(startHttpServer)
             .subscribe(CompletableHelper.toObserver(future));
     }
 
     private void clearTheValue(RoutingContext rc) {
-        retrieveCache()
-            .flatMap(cache -> vertx.rxExecuteBlocking(future -> {
-                cache.remove(KEY);
-                future.complete();
-            }))
-            .toCompletable()
+        cache.remove(KEY)
             .subscribe(
                 () -> rc.response().setStatusCode(204).end(),
                 rc::fail
@@ -88,27 +81,9 @@ public class CacheVerticle extends AbstractVerticle {
         }
     }
 
-    private Single<RemoteCache<String, String>> retrieveCache() {
-        if (cache != null) {
-            return Single.just(cache);
-        } else {
-            return vertx.<RemoteCache<String, String>>rxExecuteBlocking(future ->
-                future.complete(new RemoteCacheManager(
-                    new ConfigurationBuilder().addServer()
-                        .host("cache-server")
-                        .port(11222)
-                        .build())
-                    .getCache()
-                ))
-                .doOnSuccess(c -> {
-                    cache = c;
-                    LOGGER.info("The cache has been retrieved");
-                });
-        }
-    }
 
     private void isCached(RoutingContext rc) {
-        getCachedValue()
+        cache.get(KEY)
             .map(Optional::isPresent)
             .onErrorReturnItem(false)
             .map(cached -> new JsonObject().put("cached", cached))
@@ -122,7 +97,7 @@ public class CacheVerticle extends AbstractVerticle {
     }
 
     private void greeting(RoutingContext rc) {
-        getCachedValue()
+        cache.get(KEY)
             .flatMap(maybe ->
                 maybe.map(Single::just)
                     .orElse(
@@ -130,7 +105,7 @@ public class CacheVerticle extends AbstractVerticle {
                             .rxSend()
                             .map(HttpResponse::bodyAsJsonObject)
                             .map(j -> j.getString("name"))
-                            .flatMap(this::putInCache)
+                            .flatMap(n -> cache.put(KEY, n, ttl).toSingleDefault(n))
                     )
             )
             .map(name -> new JsonObject().put("message", "Hello " + name))
@@ -144,22 +119,5 @@ public class CacheVerticle extends AbstractVerticle {
             );
     }
 
-    private Single<String> putInCache(String name) {
-        return vertx
-            .rxExecuteBlocking(future -> {
-                cache.put(KEY, name, ttl, TimeUnit.SECONDS);
-                future.complete();
-            })
-            .map(x -> name);
-    }
 
-    private Single<Optional<String>> getCachedValue() {
-        return retrieveCache()
-            .flatMap(cache ->
-                vertx.<Optional<String>>rxExecuteBlocking(future -> {
-                    String value = cache.get(KEY);
-                    future.complete(Optional.ofNullable(value));
-                }))
-            .doOnError(t -> LOGGER.error("Unable to retrieve the cache", t));
-    }
 }
