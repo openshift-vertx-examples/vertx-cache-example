@@ -7,6 +7,7 @@ import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.Configuration;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
+import org.infinispan.client.hotrod.configuration.NearCacheMode;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +21,14 @@ public class Cache<K, V> {
     private final RemoteCache<K, V> cache;
 
     public static <K, V> Single<Cache<K, V>> create(Vertx vertx) {
-        Configuration config = new ConfigurationBuilder().addServer().host("cache-server").port(11222).build();
+        ConfigurationBuilder builder = new ConfigurationBuilder();
+        builder.addServer()
+                .host("cache-server")
+                    .port(11222);
+        builder.nearCache()
+                .mode(NearCacheMode.INVALIDATED)
+                    .maxEntries(100);
+        Configuration config = builder.build();
         return vertx.
             <RemoteCache<K, V>>rxExecuteBlocking(
                 future -> {
