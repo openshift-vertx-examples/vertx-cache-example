@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 
 public class CuteNameServiceVerticleTest {
 
-    private final static int PORT = 8080;
+    private final static int PORT = 8081;
     private Vertx vertx;
 
     @Before
