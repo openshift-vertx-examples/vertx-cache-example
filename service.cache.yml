@@ -18,13 +18,9 @@ items:
         spec:
           containers:
             - env:
-              - name: DEFAULT_CACHE_EVICTION_MAX_ENTRIES
-                value: "10"
-              - name: DEFAULT_CACHE_EXPIRATION_LIFESPAN
-                value: "10000"
               - name: INFINISPAN_CONNECTORS
                 value: hotrod
-              image: registry.access.redhat.com/jboss-datagrid-7/datagrid71-openshift:1.1
+              image: registry.access.redhat.com/jboss-datagrid-7/datagrid72-openshift:1.0
               name: cache-server
               ports:
               - containerPort: 8778
