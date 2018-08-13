@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.openshift.booster</groupId>
     <artifactId>cache-booster-vertx</artifactId>
-    <version>4-SNAPSHOT</version>
+    <version>4</version>
   </parent>
 
   <artifactId>cute-name-service</artifactId>
