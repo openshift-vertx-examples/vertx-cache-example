@@ -13,3 +13,8 @@ buildNumber.properties
 
 .settings
 integration-tests/.openshiftio
+
+.project
+.classpath
+.factorypath
+
