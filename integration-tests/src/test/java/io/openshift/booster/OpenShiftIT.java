@@ -63,19 +63,6 @@ public class OpenShiftIT {
 
     @Before
     public void setup() {
-//        await()
-//            .pollInterval(1, TimeUnit.SECONDS)
-//            .atMost(5, TimeUnit.MINUTES).until(() -> {
-//            List<Pod> list = oc.pods().list().getItems();
-//            Optional<Pod> first = list.stream()
-//                .filter(p -> p.getMetadata().getName().contains("cache-server")
-//                    && !p.getMetadata().getName().contains("deploy"))
-//                .filter(p -> p.getStatus().getPhase().contains("Running"))
-//                .findFirst();
-//
-//            return first.isPresent();
-//        });
-
         RestAssured.baseURI = greetingServiceUrl.toExternalForm();
     }
 
@@ -103,13 +90,6 @@ public class OpenShiftIT {
             );
 
         get("/api/cached").then().body("cached", is(false));
-
-        begin = System.currentTimeMillis();
-        get("/api/greeting").then().statusCode(equalTo(200));
-        end = System.currentTimeMillis();
-        long duration3 = end - begin;
-
-        assertThat(duration2).isLessThan(duration3);
     }
 
     @Test
