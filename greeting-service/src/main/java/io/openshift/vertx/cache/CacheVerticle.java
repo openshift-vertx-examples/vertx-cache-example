@@ -24,7 +24,7 @@ public class CacheVerticle extends AbstractVerticle {
     private Cache<String, String> cache;
     private WebClient client;
     private int ttl = 10;
-    private final Logger LOGGER = LoggerFactory.getLogger("Cache-Verticle");
+    private static final Logger LOGGER = LoggerFactory.getLogger("Cache-Verticle");
 
     @Override
     public void start(Future<Void> future) {
@@ -47,13 +47,13 @@ public class CacheVerticle extends AbstractVerticle {
 
         Completable retrieveCache = Cache.<String, String>create(vertx)
             .doOnSuccess(c -> this.cache = c)
-            .toCompletable();
+            .ignoreElement();
 
         Completable startHttpServer = vertx
             .createHttpServer()
-            .requestHandler(router::accept)
+            .requestHandler(router)
             .rxListen(config().getInteger("http.port", 8080))
-            .toCompletable()
+            .ignoreElement()
             .doOnComplete(() -> LOGGER.info("HTTP Server started"));
 
         retrieveCache.andThen(startHttpServer)
