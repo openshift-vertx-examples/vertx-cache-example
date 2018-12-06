@@ -28,7 +28,6 @@ public class Cache<K, V> {
                     future.complete(cache);
                 }
             )
-            .toSingle()
             .map(rc -> new Cache<>(vertx, rc));
     }
 
@@ -43,23 +42,22 @@ public class Cache<K, V> {
                 cache.remove(key);
                 future.complete();
             }
-        ).ignoreElement();
+        ).toCompletable();
     }
 
     public Single<Optional<V>> get(K key) {
         // While this method can use the Maybe type, I found easier to use an Optional.
-        return vertx.<Optional<V>>rxExecuteBlocking(future -> {
+        return vertx.rxExecuteBlocking(future -> {
             V value = cache.get(key);
             future.complete(Optional.ofNullable(value));
-        })
-          .toSingle();
+        });
     }
 
     public Completable put(K key, V value, long ttl) {
         return vertx.rxExecuteBlocking(future -> {
             cache.put(key, value, ttl, TimeUnit.SECONDS);
             future.complete();
-        }).ignoreElement();
+        }).toCompletable();
     }
 
 }
