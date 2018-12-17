@@ -14,7 +14,7 @@
   </modules>
 
   <properties>
-    <vertx.version>3.5.4</vertx.version>
+    <vertx.version>3.6.2</vertx.version>
     <infinispan.version>8.4.2.Final-redhat-1</infinispan.version>
     <vertx.verticle>io.openshift.vertx.cache.CacheVerticle</vertx.verticle>
 
