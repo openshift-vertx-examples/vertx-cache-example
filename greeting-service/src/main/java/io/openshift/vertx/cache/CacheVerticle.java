@@ -47,13 +47,13 @@ public class CacheVerticle extends AbstractVerticle {
 
         Completable retrieveCache = Cache.<String, String>create(vertx)
             .doOnSuccess(c -> this.cache = c)
-            .toCompletable();
+            .ignoreElement();
 
         Completable startHttpServer = vertx
             .createHttpServer()
-            .requestHandler(router::accept)
+            .requestHandler(router)
             .rxListen(config().getInteger("http.port", 8080))
-            .toCompletable()
+            .ignoreElement()
             .doOnComplete(() -> LOGGER.info("HTTP Server started"));
 
         retrieveCache.andThen(startHttpServer)

@@ -21,9 +21,9 @@ public class CuteNameServiceVerticle extends AbstractVerticle {
         router.get("/health").handler(rc -> rc.response().end("OK"));
 
         vertx.createHttpServer()
-            .requestHandler(router::accept)
+            .requestHandler(router)
             .rxListen(config().getInteger("http.port", 8080))
-            .toCompletable()
+            .ignoreElement()
             .subscribe(CompletableHelper.toObserver(future));
     }
 
