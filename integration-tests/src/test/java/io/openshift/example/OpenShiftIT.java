@@ -16,7 +16,7 @@
  *
  */
 
-package io.openshift.booster;
+package io.openshift.example;
 
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.restassured.RestAssured;
