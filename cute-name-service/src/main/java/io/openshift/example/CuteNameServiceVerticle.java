@@ -1,4 +1,4 @@
-package io.openshift.booster;
+package io.openshift.example;
 
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;

@@ -1,6 +1,6 @@
-# vertx-cache-booster
+# vertx-cache-example
 
-This booster demonstrates how to use a cache server from an Eclipse Vert.x application.
+This example demonstrates how to use a cache server from an Eclipse Vert.x application.
 
 ## Deployment
 
@@ -9,11 +9,11 @@ This booster demonstrates how to use a cache server from an Eclipse Vert.x appli
 ```bash
 oc apply -f service.cache.yml
 ```
-3. Deploy the booster with:
+3. Deploy the example with:
 ```bash
 mvn fabric8:deploy -Popenshift
 ```
-4. Access the exposed route (`greeting-service`) - a HTML page to use the booster is exposed.
+4. Access the exposed route (`greeting-service`) - a HTML page to use the example is exposed.
 
 ## Integration tests
 

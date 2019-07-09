@@ -442,7 +442,7 @@
             </licenses>
         </dependency>
         <dependency>
-            <groupId>io.openshift.booster</groupId>
+            <groupId>io.openshift.example</groupId>
             <artifactId>cute-name-service</artifactId>
             <version>1-SNAPSHOT</version>
             <licenses>
@@ -453,7 +453,7 @@
             </licenses>
         </dependency>
         <dependency>
-            <groupId>io.openshift.booster</groupId>
+            <groupId>io.openshift.example</groupId>
             <artifactId>greeting-service</artifactId>
             <version>1-SNAPSHOT</version>
             <licenses>
