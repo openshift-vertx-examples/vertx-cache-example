@@ -18,13 +18,15 @@ public class Cache<K, V> {
 
     private final Vertx vertx;
     private final RemoteCache<K, V> cache;
+    private static RemoteCacheManager rcm;
 
     public static <K, V> Single<Cache<K, V>> create(Vertx vertx) {
         Configuration config = new ConfigurationBuilder().addServer().host("cache-server").port(11222).build();
+        rcm = new RemoteCacheManager(config);
         return vertx.
             <RemoteCache<K, V>>rxExecuteBlocking(
                 future -> {
-                    RemoteCache<K, V> cache = new RemoteCacheManager(config).getCache();
+                    RemoteCache<K, V> cache = rcm.getCache();
                     future.complete(cache);
                 }
             )
