@@ -18,7 +18,7 @@
     <infinispan.version>10.1.2.Final</infinispan.version>
     <vertx.verticle>io.openshift.vertx.cache.CacheVerticle</vertx.verticle>
 
-    <vertx-maven-plugin.version>1.0.20</vertx-maven-plugin.version>
+    <vertx-maven-plugin.version>1.0.22</vertx-maven-plugin.version>
     
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
