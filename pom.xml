@@ -15,7 +15,7 @@
 
   <properties>
     <vertx.version>3.8.5</vertx.version>
-    <infinispan.version>9.4.15.Final</infinispan.version>
+    <infinispan.version>10.1.2.Final</infinispan.version>
     <vertx.verticle>io.openshift.vertx.cache.CacheVerticle</vertx.verticle>
 
     <vertx-maven-plugin.version>1.0.22</vertx-maven-plugin.version>
