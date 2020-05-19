@@ -10,8 +10,8 @@ items:
         app.kubernetes.io/part-of: cache-example
         app.kubernetes.io/name: greeting-cache
         app.kubernetes.io/component: cache
-        app.kubernetes.io/runtime: datagrid
-        app.kubernetes.io/runtime-version: "7.3"
+        app.openshift.io/runtime: datagrid
+        app.openshift.io/runtime-version: "7.3"
     spec:
       replicas: 1
       strategy:
@@ -48,8 +48,8 @@ items:
         app.kubernetes.io/part-of: cache-example
         app.kubernetes.io/name: greeting-cache
         app.kubernetes.io/component: cache
-        app.kubernetes.io/runtime: datagrid
-        app.kubernetes.io/runtime-version: "7.3"
+        app.openshift.io/runtime: datagrid
+        app.openshift.io/runtime-version: "7.3"
       name: cache-server
     spec:
       selector:
