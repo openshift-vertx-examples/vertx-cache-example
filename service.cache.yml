@@ -7,6 +7,11 @@ items:
       name: cache-server
       labels:
         app: cache-server
+        app.kubernetes.io/part-of: cache-example
+        app.kubernetes.io/name: greeting-cache
+        app.kubernetes.io/component: cache
+        app.openshift.io/runtime: datagrid
+        app.openshift.io/runtime-version: "7.3"
     spec:
       replicas: 1
       strategy:
@@ -40,6 +45,11 @@ items:
     metadata:
       labels:
         app: cache-server
+        app.kubernetes.io/part-of: cache-example
+        app.kubernetes.io/name: greeting-cache
+        app.kubernetes.io/component: cache
+        app.openshift.io/runtime: datagrid
+        app.openshift.io/runtime-version: "7.3"
       name: cache-server
     spec:
       selector:
