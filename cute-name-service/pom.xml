@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.openshift.example</groupId>
     <artifactId>cache-example-vertx</artifactId>
-    <version>14-SNAPSHOT</version>
+    <version>14</version>
   </parent>
 
   <artifactId>cute-name-service</artifactId>
