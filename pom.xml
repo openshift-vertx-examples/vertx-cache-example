@@ -15,7 +15,7 @@
 
   <properties>
     <vertx.version>3.9.1</vertx.version>
-    <infinispan.version>9.4.15.Final</infinispan.version>
+    <infinispan.version>9.4.19.Final</infinispan.version>
     <vertx.verticle>io.openshift.vertx.cache.CacheVerticle</vertx.verticle>
 
     <vertx-maven-plugin.version>1.0.22</vertx-maven-plugin.version>
@@ -27,7 +27,7 @@
     <fabric8-maven-plugin.version>4.4.1</fabric8-maven-plugin.version>
     <arquillian-cube.version>1.18.2</arquillian-cube.version>
 
-    <fabric8.generator.from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift</fabric8.generator.from>
+    <fabric8.generator.from>registry.access.redhat.com/ubi8/openjdk-11</fabric8.generator.from>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -60,12 +60,6 @@
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <version>3.16.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.jayway.restassured</groupId>
-      <artifactId>rest-assured</artifactId>
-      <version>2.9.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
