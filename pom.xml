@@ -14,7 +14,7 @@
   </modules>
 
   <properties>
-    <vertx.version>3.9.1</vertx.version>
+    <vertx.version>3.9.3</vertx.version>
     <infinispan.version>9.4.19.Final</infinispan.version>
     <vertx.verticle>io.openshift.vertx.cache.CacheVerticle</vertx.verticle>
 
