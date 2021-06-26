@@ -11,7 +11,7 @@ oc apply -f service.cache.yml
 ```
 3. Deploy the example with:
 ```bash
-mvn fabric8:deploy -Popenshift
+mvn oc:deploy -Popenshift
 ```
 4. Access the exposed route (`greeting-service`) - a HTML page to use the example is exposed.
 
