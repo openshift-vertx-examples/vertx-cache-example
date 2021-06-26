@@ -87,12 +87,12 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>fabric8-maven-plugin</artifactId>
-            <version>${fabric8-maven-plugin.version}</version>
+            <groupId>org.eclipse.jkube</groupId>
+            <artifactId>openshift-maven-plugin</artifactId>
+            <version>${jkube.version}</version>
             <executions>
               <execution>
-                <id>fmp</id>
+                <id>jkube</id>
                 <goals>
                   <goal>resource</goal>
                   <goal>build</goal>
@@ -102,12 +102,12 @@
             <configuration>
               <enricher>
                 <excludes>
-                  <exclude>f8-maven-scm</exclude>
+                  <exclude>jkube-maven-scm</exclude>
                 </excludes>
                 <config>
-                  <f8-healthcheck-vertx>
+                  <jkube-healthcheck-vertx>
                     <path>/health</path>
-                  </f8-healthcheck-vertx>
+                  </jkube-healthcheck-vertx>
                 </config>
               </enricher>
               <resources>
